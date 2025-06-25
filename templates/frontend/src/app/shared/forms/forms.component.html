@@ -1,0 +1,66 @@
+<h2 mat-dialog-title>Create {{ data.config.title }}</h2>
+<mat-dialog-content class="w-full">
+  <div class="flex flex-wrap gap-x-4 gap-y-1">
+    <ng-container *ngFor="let field of data.config.fields; let i = index">
+      <!-- If inlineBlock is true, add a full-width break -->
+      <div *ngIf="shouldShowField(field, i)" [ngClass]="field.class">
+
+
+        <div *ngIf="field.inlineBlock" class=" h-0  " [style.width.px]="dialogWidth"> </div>
+        <!-- Render fields based on type -->
+        <ng-container [ngSwitch]="field.type">
+          <!-- Form Field -->
+          <mat-form-field *ngSwitchCase="'form-field'" appearance="outline" class="w-full h-full ">
+            <mat-label>{{field.placeholder}}</mat-label>
+            <input matInput class="bg-primary text-white" [required]="field.required"
+              [formControl]="filterForm.controls[field.placeholder]" [(ngModel)]="field.value">
+            <mat-hint *ngIf="field.hint">{{field.hint}}</mat-hint>
+            <mat-error *ngIf="filterForm.controls[field.placeholder].hasError('required')">
+              Valid {{field.placeholder}} is required!
+            </mat-error>
+            <mat-error *ngIf="filterForm.controls[field.placeholder].hasError('email')">
+              Valid Email is required!
+            </mat-error>
+          </mat-form-field>
+
+          <forms-select *ngSwitchCase="'form-select'" [required]="field.required" [placeholder]="field.placeholder"
+            [options]="field.options" [hint]="field.hint" [api]="field.api" (selectionChange)="field.value = $event">
+          </forms-select>
+          <!-- Search Select select -->
+          <div *ngSwitchCase="'search-select'" class="gap-2 w-full h-full flex  ">
+
+            <search-select [placeholder]="field.placeholder" [required]="field.required" [options]="field.options"
+              [hint]="field.hint" [api]="field?.componentData?.api" [perPage]="field?.componentData?.perPage"
+              (selectionChange)="field.value = $event" class="flex-grow"></search-select>
+            <!-- Icon Button -->
+            <ng-container *ngIf="field.addNewItem">
+              <button mat-icon-button class="add-btn flex-shrink-0" matTooltip="Add {{field.placeholder}}"
+                (click)="openAddNewDialog(field.addNewItem.config)">
+                <mat-icon>add</mat-icon>
+              </button>
+            </ng-container>
+          </div>
+          <!-- Custom Components -->
+          <ng-container *ngSwitchCase="'custom-component'">
+            <ng-container *ngComponentOutlet="field.component; injector: createInjector(field)"></ng-container>
+          </ng-container>
+          <!--   mat-checkbox -->
+          <mat-checkbox *ngSwitchCase="'checkbox'" [(ngModel)]="field.componentData.isChecked">
+            {{ field.placeholder}}
+          </mat-checkbox>
+          <!-- Date-picker -->
+          <date-picker *ngSwitchCase="'date-picker-field'" [minDate]="field.componentData.minDate"
+            [maxDate]="field.componentData.maxDate" (dateChange)="field.value = $event"
+            [placeholder]="field.placeholder" [required]="field.required">
+          </date-picker>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+</mat-dialog-content>
+<!-- Buttons -->
+<mat-dialog-actions style="display: flex; justify-content: space-between;">
+
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-button cdkFocusInitial (click)="onSave()" [disabled]="isDisable()">Save & Close</button>
+</mat-dialog-actions>

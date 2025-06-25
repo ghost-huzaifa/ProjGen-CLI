@@ -1,0 +1,102 @@
+:host {
+  .mat-toolbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  mat-nav-list.horizontal-nav {
+    display: flex;
+    flex-direction: row;
+    background: transparent;
+    padding: 0;
+    
+    // .mat-mdc-list-item {
+    //   height: 64px;
+    //   width: auto;
+    //   border-radius: 0;
+    //   padding: 0 16px;
+      
+    //   &:hover {
+    //     background-color: rgba(255, 255, 255, 0.1);
+    //   }
+      
+    //   .mdc-list-item__content {
+    //     color: white;
+    //   }
+      
+    //   mat-icon {
+    //     color: white;
+    //     margin-right: 8px;
+    //   }
+    // }
+  }
+  
+  .active-nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #4f5eb3;
+    color: white;
+   
+  }
+
+  .active-child-nav-item {
+    background-color: rgba(0, 0, 0, 0.04);
+    color: #3f51b5; // Primary color
+  }
+  
+  // Make navigation buttons more compact at medium screens
+  .nav-item {
+    transition: all 0.3s ease;
+    
+    .dropdown-icon {
+      transition: all 0.3s ease;
+    }
+  }
+}
+
+/* This is a more specific selector to override Material styles */
+.mat-toolbar button.menu-toggle.mat-icon-button {
+  display: inline-flex;
+}
+
+@media (min-width: 768px) {
+  .mat-toolbar button.menu-toggle.mat-icon-button {
+    display: none !important;
+  }
+}
+
+/* Medium screens only - show icons only */
+@media (min-width: 768px) and (max-width: 1023px) {
+  :host {
+    .nav-item {
+      min-width: 48px !important;
+      padding: 0 12px !important;
+      display: flex !important; 
+      justify-content: center !important;
+      align-items: center !important;
+      
+      .nav-label {
+        display: none !important;
+      }
+      
+      .dropdown-icon {
+        display: none !important;
+      }
+      
+      mat-icon {
+        margin: 0 !important;
+      }
+    }
+  }
+}
+
+/* Large screens - show labels and icons */
+@media (min-width: 1024px) {
+  :host {
+    .nav-item {
+      .nav-label {
+        margin-left: 8px;
+      }
+    }
+  }
+} 

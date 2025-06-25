@@ -1,0 +1,72 @@
+<mat-toolbar color="primary" class="px-4">
+  <!-- Logo/Brand -->
+  <span class="font-semibold ml-6">CHARMS</span>
+
+  <!-- Navigation links - with responsive behavior -->
+  <div class="hidden md:flex items-center space-x-1 ml-4 flex-grow overflow-x-auto overflow-y-hidden">
+    <ng-container *ngFor="let item of navItems">
+      <!-- Item without children -->
+      <button *ngIf="!item.hasChildren" mat-button class="nav-item" [routerLink]="[item.route]"
+        routerLinkActive="active-nav-item" [routerLinkActiveOptions]="{exact: item.route === '/dashboard'}"
+        [matTooltip]="item.label">
+        <mat-icon>{{item.icon}}</mat-icon>
+        <span class="nav-label">{{item.label}}</span>
+      </button>
+
+      <!-- Item with children - dropdown -->
+      <button *ngIf="item.hasChildren" mat-button class="nav-item" [matMenuTriggerFor]="childMenu"
+        routerLinkActive="active-nav-item" [matTooltip]="item.label">
+        <mat-icon>{{item.icon}}</mat-icon>
+        <span class="nav-label">{{item.label}}</span>
+        <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+      </button>
+
+      <!-- Child menu for items with children -->
+      <mat-menu #childMenu="matMenu" class="w-40 rounded-full">
+        <ng-container *ngIf="item.hasChildren">
+          <button mat-menu-item *ngFor="let child of item.children" [routerLink]="[child.route]"
+            routerLinkActive="active-child-nav-item">
+            {{child.label}}
+          </button>
+        </ng-container>
+      </mat-menu>
+    </ng-container>
+  </div>
+
+  <!-- Right side items -->
+  <div class="flex items-center ml-auto">
+
+    <!-- Messages -->
+    <button mat-icon-button class="ml-2" matTooltip="Messages">
+      <mat-icon>email</mat-icon>
+    </button>
+
+    <!-- User profile -->
+    <button mat-icon-button class="ml-2" [matMenuTriggerFor]="profileMenu" matTooltip="Profile">
+      <mat-icon>person</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>
+
+<!-- Profile menu -->
+<mat-menu #profileMenu="matMenu" class="w-64">
+  <div class="px-4 py-2 text-gray-500">
+    <div class="font-medium">{{ authService.currentUserValue?.firstName + ' ' + authService.currentUserValue?.lastName
+      || 'User' }}</div>
+    <div class="text-sm">{{ authService.currentUserValue?.email || 'user@example.com' }}</div>
+  </div>
+  <mat-divider></mat-divider>
+  <button mat-menu-item (click)="navigateTo('/profile')">
+    <mat-icon>person</mat-icon>
+    <span class="text-sm">Profile</span>
+  </button>
+  <button mat-menu-item (click)="navigateTo('/settings')">
+    <mat-icon>settings</mat-icon>
+    <span class="text-sm">Settings</span>
+  </button>
+  <mat-divider></mat-divider>
+  <button mat-menu-item (click)="logout()">
+    <mat-icon>exit_to_app</mat-icon>
+    <span class="text-sm">Logout</span>
+  </button>
+</mat-menu>

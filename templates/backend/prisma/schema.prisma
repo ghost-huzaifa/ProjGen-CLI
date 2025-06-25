@@ -1,0 +1,141 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+//TODO: Change the id to modelNameId
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  userId      String @id @default(uuid())
+  email       String @unique
+  password    String
+  phoneNumber String @unique // Done by Ahsan (TODO: Check if phoneNumber is being used as unique or not)
+
+  // UserInfo fields
+  fullName          String
+  firstName         String
+  lastName          String
+  dateOfBirth       DateTime
+  gender            String
+  height            String?
+  preferredPronouns String?
+
+  // Emergency contact
+  emergencyContactName     String
+  emergencyContactPhone    String
+  emergencyContactRelation String
+
+  // Address fields
+  address String?
+  zip     String?
+
+  isActive           Boolean          @default(true)
+  isEmailVerified    Boolean          @default(false)
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  roles              UserRole[]
+  permissions        UserPermission[]
+  attributeValues    UserAttribute[]
+  createdPermissions Permission[]     @relation("creator")
+  createdRoles       Role[]           @relation("creator")
+}
+
+model Role {
+  id          String           @id @default(uuid())
+  name        String           @unique
+  description String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @default(now())
+  creatorId   String?
+  creator     User?            @relation("creator", fields: [creatorId], references: [userId], onDelete: SetNull)
+  users       UserRole[]
+  permissions RolePermission[]
+}
+
+//join table
+model UserRole {
+  userId     String
+  roleId     String
+  assignedAt DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  role       Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+}
+
+enum PERMISSION_GROUP {
+  APPOINTMENT
+  AVAILABILITY
+  CLINIC
+  HUB
+  PATIENT
+  STAFF
+  EMPLOYEE
+  SETTINGS
+  USER
+  DASHBOARD
+  NOTIFICATION
+  CONSULTATION
+}
+
+model Permission {
+  id              String           @id @default(uuid())
+  name            String           @unique
+  description     String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @default(now())
+  creatorId       String?
+  creator         User?            @relation("creator", fields: [creatorId], references: [userId], onDelete: SetNull)
+  users           UserPermission[]
+  roles           RolePermission[]
+  permissionGroup PERMISSION_GROUP
+}
+
+//join table
+model UserPermission {
+  userId       String
+  permissionId String
+  assignedAt   DateTime   @default(now())
+  user         User       @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([userId, permissionId])
+}
+
+//join table
+model RolePermission {
+  roleId       String
+  permissionId String
+  assignedAt   DateTime   @default(now())
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+}
+
+model Attribute {
+  id    String          @id @default(uuid())
+  value String
+  users UserAttribute[]
+}
+
+//join table
+model UserAttribute {
+  userId      String
+  attributeId String
+  value       String    @default("")
+  assignedAt  DateTime  @default(now())
+  user        User      @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+
+  @@id([userId, attributeId])
+}

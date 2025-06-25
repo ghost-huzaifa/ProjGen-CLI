@@ -1,0 +1,40 @@
+<div appearance="outline" class=" flex w-full items-start">
+
+    <!-- Dropdown with 40% width -->
+    <mat-select
+        style="background-color: #dfeaff; height: 56px;  padding: 14px; margin-right: 10px; border-radius: 3px;width: 40%;"
+        [value]="selectedCountryCode?.value" (selectionChange)="onCountryCodeChange($event)">
+        <mat-select-trigger>
+            <div class="flex items-center justify-center">
+                <img *ngIf="selectedCountryCode?.flag" [src]="selectedCountryCode?.flag"
+                    style="height: 16px; margin-right: 6px;" />
+                {{ selectedCountryCode?.viewValue }}
+            </div>
+        </mat-select-trigger>
+        <mat-option *ngFor="let countryCode of countryCodes" [value]="countryCode.value">
+            <div class="flex items-center justify-center">
+                <img [src]="countryCode.flag" style="height: 16px; margin-right: 6px;" />
+                {{ countryCode.viewValue }}
+            </div>
+        </mat-option>
+    </mat-select>
+
+    <!-- Input field with 60% width -->
+    <mat-form-field appearance="outline" style="padding: 0;width: 100%;">
+        <mat-label>Phone number</mat-label>
+        <input matInput type="tel" [placeholder]="selectedCountryCode?.mask" [required]="required"
+            [formControl]="internalControl" autocomplete="on" style="width: 100%;" (paste)="onPaste($event)"
+            (beforeinput)="onBeforeInput($event)" (input)="onInput($event)" />
+
+        <mat-error *ngIf="internalControl?.errors?.alreadyUsed">Mobile
+            no. already registered!</mat-error>
+
+        <mat-error *ngIf="internalControl?.errors?.authError">{{internalControl?.errors?.authError}}</mat-error>
+
+        <mat-error *ngIf="internalControl.errors?.required">Mobile number is
+            required</mat-error>
+        <mat-error *ngIf="internalControl.errors?.invalidPhoneNumber" data-cy="mobile-validation-error">Mobile number is
+            incorrect</mat-error>
+
+    </mat-form-field>
+</div>

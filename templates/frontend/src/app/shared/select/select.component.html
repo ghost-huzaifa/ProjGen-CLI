@@ -1,0 +1,24 @@
+<mat-form-field  appearance="outline"  class="w-full" (click)="onSelectClick()">
+    <mat-label>{{ placeholder }}</mat-label>
+    <mat-select [(ngModel)]="selectedValue" (selectionChange)="onValueChange($event)"  [required]="required" panelClass="custom-panel">
+      <div  class="options-container">
+        <mat-option *ngFor="let option of options" [value]="option.value" [disabled]="option.label === 'No Records Available'">{{ option.label }}</mat-option>
+        <mat-option *ngIf="loader" disabled >
+          <div class="flex justify-center gap-4">
+            <span> Loading ...</span>
+         
+            <mat-progress-spinner
+           diameter="20"
+           mode="indeterminate"
+         ></mat-progress-spinner>
+          </div>
+       
+        </mat-option>
+      </div>
+
+    </mat-select>
+    <mat-error *ngIf="filterForm.controls['required'].hasError('required')">
+      {{ placeholder }} is required!
+    </mat-error>
+    <mat-hint *ngIf="hint">{{hint}}</mat-hint>
+</mat-form-field>

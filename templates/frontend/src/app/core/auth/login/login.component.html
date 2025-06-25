@@ -1,0 +1,183 @@
+<div class="login-container">
+  <!-- Header -->
+  <header class="header">
+    <img src="../../../../assets/images/prevcare-logo.svg" alt="PrevCare-logo" class="logo" />
+  </header>
+
+  <!-- Main content section -->
+  <section class="main-content">
+    <!-- Left side - login form -->
+    <div class="form-container">
+      <div class="form-wrapper">
+        <!-- Form header -->
+        <div class="form-header">
+          <h1>Log in</h1>
+          <p>Welcome! Please enter your details.</p>
+        </div>
+        <!-- Login form -->
+        <form [formGroup]="isEmailType ? emailLoginForm : phoneNumberLoginForm" (ngSubmit)="onSubmit()">
+          <!-- Login type toggle -->
+          <div class="login-toggle-container">
+            <div class="login-type-tabs">
+              <div class="tab" [class.active]="isEmailType" (click)="toggleLoginType(true)">Email</div>
+              <div class="tab" [class.active]="!isEmailType" (click)="toggleLoginType(false)">Phone No</div>
+            </div>
+          </div>
+
+          <!-- Email Field -->
+          <ng-container *ngIf="isEmailType; else phoneNumberType">
+            <div class="form-field">
+              <label>Email</label>
+              <mat-form-field appearance="outline">
+                <mat-icon matPrefix>email</mat-icon>
+                <input
+                  matInput
+                  type="email"
+                  formControlName="email"
+                  placeholder="example@email.com"
+                  autocomplete="email"
+                  required
+                />
+              </mat-form-field>
+              <p
+                class="form-error"
+                *ngIf="emailLoginForm.get('email')?.errors?.['required'] && emailLoginForm.get('email')?.touched"
+              >
+                Email is required
+              </p>
+              <p
+                class="form-error"
+                *ngIf="emailLoginForm.get('email')?.errors?.['email'] && emailLoginForm.get('email')?.touched"
+              >
+                Please enter a valid email address
+              </p>
+            </div>
+          </ng-container>
+
+          <!-- Phone Number Field -->
+          <ng-template #phoneNumberType>
+            <div class="form-field">
+              <label>Phone Number</label>
+              <chi-phone-number
+                [control]="phoneNumberLoginForm.controls.phoneNumber"
+                [required]="true"
+              ></chi-phone-number>
+            </div>
+          </ng-template>
+
+          <!-- Password Field -->
+          <div class="form-field">
+            <label>Password</label>
+            <mat-form-field appearance="outline">
+              <mat-icon matPrefix>lock</mat-icon>
+              <input
+                matInput
+                [type]="hidePassword ? 'password' : 'text'"
+                formControlName="password"
+                placeholder="Password"
+                autocomplete="current-password"
+                required
+              />
+              <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword" tabindex="-1">
+                <mat-icon>{{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
+              </button>
+            </mat-form-field>
+            <p class="form-error" *ngIf="loginError">{{ loginError }}</p>
+          </div>
+
+          <div class="form-actions">
+            <div></div>
+            <a class="forgot-password" routerLink="/auth/forgot-password"> Forgot password? </a>
+          </div>
+
+          <!-- Login Button -->
+          <button
+            class="login-form-btn"
+            type="submit"
+            [disabled]="loading || (isEmailType ? emailLoginForm.invalid : phoneNumberLoginForm.invalid)"
+          >
+            <div class="button-content">
+              <mat-spinner *ngIf="loading" diameter="18" class="spinner"></mat-spinner>
+              <span>Log in</span>
+            </div>
+          </button>
+
+          <!-- Development button -->
+          <mat-card class="mt-2" appearance="outlined">
+            <mat-card-header>
+              <mat-card-title>Development Login</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="flex flex-col gap-2">
+                <div class="flex gap-2 justify-between">
+                  <button
+                    type="button"
+                    mat-flat-button
+                    color="accent"
+                    class="dev-login-btn flex-1"
+                    (click)="testLogin(TEST_LOGIN_USER.SUPER_ADMIN)"
+                    [disabled]="loading"
+                  >
+                    Super Admin
+                  </button>
+                  <button
+                    type="button"
+                    mat-flat-button
+                    color="accent"
+                    class="dev-login-btn flex-1"
+                    (click)="testLogin(TEST_LOGIN_USER.RECEPTIONIST)"
+                    [disabled]="loading"
+                  >
+                    Receptionist
+                  </button>
+                </div>
+                <div class="flex gap-2 justify-between">
+                  <button
+                    type="button"
+                    mat-flat-button
+                    color="accent"
+                    class="dev-login-btn flex-1"
+                    (click)="testLogin(TEST_LOGIN_USER.NURSE)"
+                    [disabled]="loading"
+                  >
+                    Nurse
+                  </button>
+                <!--   <button
+                    type="button"
+                    mat-flat-button
+                    color="accent"
+                    class="dev-login-btn flex-1"
+                    (click)="testLogin(TEST_LOGIN_USER.DOCTOR)"
+                    [disabled]="loading"
+                  >
+                    Doctor
+                  </button >-->
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </form>
+
+        <!-- Device Security Notice -->
+        <div class="security-notice">
+          <mat-icon>security</mat-icon>
+          <span>This device information will be securely stored with your account</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right side - image area -->
+    <div class="w-1/2 h-auto max-h-1/2 bg-[#f9fafb] image-container">
+      <div class="flex justify-center items-center">
+        <img src="../../../../assets/images/auth-bg.svg" alt="PrevCare-Background-image" class="responsive-image" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div *ngIf="true" class="build-time">Build Time: {{ buildTime }}</div>
+
+    <p>© 2025 Charms Proactive Wellness. All rights reserved.</p>
+  </footer>
+</div>

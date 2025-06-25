@@ -1,0 +1,84 @@
+generated/
+gen-projects/*
+.idea/
+dist/
+
+# compiled output
+~*.xlsx
+__pycache__/
+*.pyc
+GENERATED_CODE/
+home3/
+/dist
+**/node_modules
+/node_modules
+craft-*/
+dbml/
+# Logs
+package-lock.json
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+ERD.svg
+debug/
+debug1/
+dbml/
+datamodel/
+# OS
+.DS_Store
+project-dmmf.json
+project-dict.json
+project-dict.yaml
+
+# Tests
+/coverage*/
+/.nyc_output
+
+migrations
+# prisma
+#.env
+# .env.test
+#env.conf
+/uploads
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Data
+# **/modules
+**/modulesNew
+**/modules-*
+
+__pycache__
+*.pyc
+
+*.tar.gz
+
+receipt/
+
+backends/nest-prisma/prisma/schema.prisma
+generated/*
+gen/
+gener/
+
+generated/
+# nestjs/
+# *-projs/*
+# *-basecodes/*

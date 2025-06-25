@@ -1,0 +1,26 @@
+  <mat-form-field class="w-full h-full" appearance="outline" (click)="onSelectClick()">
+    <mat-label>{{placeholder}}</mat-label>
+    <input type="text" [required]="required" aria-label="Number" matInput [matAutocomplete]="auto"
+    [formControl]="selectedOptionControl" (input)="onInputChange($event)">
+
+    <mat-icon *ngIf="selectedOptionControl.value" matSuffix class="cursor-pointer" (click)="emptySearch($event)">close</mat-icon>
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event)">
+      <mat-option *ngFor="let option of options" [value]="option"
+        [disabled]="option.label === 'No Records Available'">
+        {{ option.label }}
+      </mat-option>
+      <mat-option *ngIf="loader" disabled>
+        <div class="flex justify-center gap-4">
+          <span> Loading ...</span>
+          <mat-progress-spinner diameter="20" mode="indeterminate"></mat-progress-spinner>
+        </div>
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error *ngIf="filterForm.controls['required'].hasError('required')">
+      {{placeholder}} is required!
+    </mat-error>
+    <mat-hint *ngIf="hint">{{hint}}</mat-hint>
+
+  </mat-form-field>
+
+

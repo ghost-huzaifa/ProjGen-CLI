@@ -1,0 +1,12 @@
+<mat-form-field appearance="outline" class="w-full h-full">
+    <mat-label>{{placeholder}}</mat-label>
+    <input matInput [matDatepicker]="datePicker" [min]="minDate" [max]="maxDate" data-cy="registration-date"
+        [required]="required" [formControl]="filterForm.controls['required']" (dateChange)="onDateChange($event)" />
+    <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+    <mat-datepicker #datePicker></mat-datepicker>
+    <mat-error *ngIf="filterForm.controls['required'].hasError('required')">
+        Valid {{placeholder}} is required!
+    </mat-error>
+
+    <mat-hint>MM/dd/YYYY</mat-hint>
+</mat-form-field>
